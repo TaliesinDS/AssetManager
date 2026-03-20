@@ -249,6 +249,28 @@ GALLERY_TEMPLATE = """\
   }
   .btn:hover { background: #555; }
   .btn + .btn { margin-left: 0.5rem; }
+  .modal-res-tags {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+  }
+  .modal-res-tag {
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #444;
+    color: #aaa;
+    border: 1px solid #555;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .modal-res-tag:hover { background: #555; color: var(--text); }
+  .modal-res-tag.active {
+    background: #666;
+    color: var(--text);
+    border-color: #999;
+  }
   .folder-path {
     font-size: 0.75rem;
     color: #666;
@@ -334,6 +356,7 @@ GALLERY_TEMPLATE = """\
       <div class="label">Tiling <input type="range" id="tile-zoom" min="10" max="200" value="50"> <span id="tile-zoom-label">2×2</span></div>
       <div class="tile-box" id="tile-box"></div>
     </div>
+    <div class="modal-res-tags" id="modal-res-tags"></div>
     <dl class="modal-detail" id="modal-detail"></dl>
     <div class="modal-maps" id="modal-maps"></div>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center">
@@ -408,6 +431,33 @@ cards.forEach(c => {
     tileBgPos = [0, 0];
     tileBox.style.backgroundPosition = "0px 0px";
     updateTile();
+    // Resolution tags — clickable to switch folder
+    const resFolders = JSON.parse(c.dataset.resFolders || "{}");
+    const resTagsDiv = document.getElementById("modal-res-tags");
+    const resList = (c.dataset.resolutions || "").split(",").filter(Boolean);
+    const resOrder = {"1K":1,"2K":2,"4K":4,"8K":8};
+    const defaultRes = resList.length ? resList.reduce((a,b) => (resOrder[b]||0) > (resOrder[a]||0) ? b : a) : "";
+    function selectRes(res) {
+      const folder = resFolders[res] || c.dataset.folder;
+      currentFolder = folder;
+      document.getElementById("modal-open-folder").href = "/browse?path=" + encodeURIComponent(folder);
+      document.getElementById("modal-folder-path").textContent = folder;
+      resTagsDiv.querySelectorAll(".modal-res-tag").forEach(t => {
+        t.classList.toggle("active", t.dataset.res === res);
+      });
+    }
+    if (resList.length > 1) {
+      resTagsDiv.innerHTML = resList.map(r =>
+        '<span class="modal-res-tag' + (r === defaultRes ? ' active' : '') + '" data-res="' + r + '">' + r + '</span>'
+      ).join("");
+      resTagsDiv.style.display = "";
+      resTagsDiv.querySelectorAll(".modal-res-tag").forEach(t => {
+        t.addEventListener("click", () => selectRes(t.dataset.res));
+      });
+    } else {
+      resTagsDiv.innerHTML = "";
+      resTagsDiv.style.display = "none";
+    }
     // Detail info
     const dl = document.getElementById("modal-detail");
     dl.innerHTML =
@@ -664,15 +714,23 @@ def generate_gallery(
         map_data = ",".join(map_list)  # for modal
         # Use the folder path of the highest-res variant for "open folder"
         folder_path = str(best.folder.resolve()).replace("\\", "\\\\")
-        # HTML-safe display name
+        # Build resolution → folder mapping for modal switching
+        import json as json_mod
         import html as html_mod
+        res_folders = {}
+        for ts in variants:
+            if ts.resolution:
+                res_folders[ts.resolution] = str(ts.folder.resolve()).replace("\\", "\\\\")
+        res_folders_json = html_mod.escape(json_mod.dumps(res_folders))
+        # HTML-safe display name
         safe_name = html_mod.escape(name)
 
         cards_html.append(
             f'<div class="card" data-name="{name.lower()}" '
             f'data-display-name="{safe_name}" '
             f'data-source="{best.source.value}" data-resolutions="{res_data}" '
-            f'data-maps="{map_data}" data-folder="{folder_path}">'
+            f'data-maps="{map_data}" data-folder="{folder_path}" '
+            f'data-res-folders="{res_folders_json}">'
             f'{thumb}'
             f'<div class="info">'
             f'<div class="name" title="{safe_name}">{safe_name}</div>'

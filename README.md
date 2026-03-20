@@ -2,6 +2,10 @@
 
 Python CLI tool for managing a game dev texture library. Scans PBR texture sets from mixed sources (PolyHaven, AmbientCG, Megascans, etc.), generates sphere preview thumbnails, and exports Unity-ready material folders.
 
+![Texture Library gallery grid](images/grid.png)
+
+![Detail modal with resolution switcher](images/detail.png)
+
 ## Quick Start
 
 ```bash
@@ -61,6 +65,8 @@ The HTML gallery (`Open Gallery.bat`) includes:
 - **Sphere / Flat toggle** — switch all card thumbnails between PBR sphere renders and flat albedo crops
 - **Search & filter** — filter by name, source (PolyHaven / AmbientCG / Megascans), or resolution
 - **Detail modal** — click any card to see both previews at a larger size, map types, source, and resolution info
+- **Resolution switcher** — when a texture has multiple resolutions (1K/2K/4K), click the tags in the modal to switch between them
+- **Tiling preview** — see how a texture tiles, with drag-to-pan and scroll-to-zoom
 - **Browse Files** — opens a server-side directory listing where image files are clickable for full-size preview
 - **Open in Explorer** — opens the texture folder directly in Windows Explorer
 
@@ -75,6 +81,10 @@ paths:
   texture_library: "G:\\Gamedev\\asset library\\texture"
   output: "./output"
   blender: "C:\\Program Files\\Blender Foundation\\Blender 5.0\\blender.exe"
+
+unity_export:
+  render_pipeline: "URP"
+  preferred_resolution: "2K"
 ```
 
 All commands accept `--path` and `--output` overrides.
@@ -108,7 +118,8 @@ These can be copied directly into your Unity project's `Assets/Textures/` folder
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.9+
 - Pillow (`pip install Pillow`) — for flat albedo-crop thumbnails
-- Blender 5.0 (only for `thumbnails` command — everything else works without it)
+- Jinja2 (`pip install Jinja2`) — template rendering
 - PyYAML (`pip install pyyaml`) — config loading
+- Blender 5.0 (only for `thumbnails` command — everything else works without it)

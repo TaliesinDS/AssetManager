@@ -36,6 +36,8 @@ Target: Unity URP.
 - [x] Both sphere (Blender PBR) and flat (albedo crop) thumbnails per card with toggle switch
 - [x] Dark theme, responsive grid, search by name, filter by source & resolution
 - [x] Detail modal with both previews, map list, source, resolutions, folder path
+- [x] Tiling preview in detail modal with drag-to-pan and scroll-to-zoom
+- [x] Resolution switcher — clickable resolution tags in modal to switch between 1K/2K/4K folders
 - [x] "Browse Files" — server-side directory listing with clickable image previews
 - [x] "Open in Explorer" — opens texture folder in Windows Explorer via server API
 - [x] `server.py` — localhost server (port 8271) serving gallery + browse + folder-open API
@@ -76,7 +78,7 @@ Potential improvements (do NOT build until needed):
 - **Normal map DX→GL flip** — Megascans normals are DX; currently exported as-is. Could auto-flip green channel via Pillow for URP.
 - **Roughness→Smoothness inversion** — URP Lit uses Smoothness (= 1 - Roughness). Could auto-invert on export.
 - **Metallic+Smoothness packing** — URP wants Metallic (R) + Smoothness (A) in one texture. Could auto-pack.
-- **Resolution picker** — `--resolution 2K` to only export 2K variants and skip 1K/4K dupes.
+- **Resolution picker for export** — `--resolution 2K` to only export 2K variants and skip 1K/4K dupes.
 - **Mask map packing** — HDRP uses packed RGBA mask map (Metallic/AO/Detail/Smoothness).
 - **Blender Asset Library bridge** — generate `.blend` asset library files for Blender's asset browser.
 - **Tagging / search** — Megascans JSON already has categories. Could expose in gallery.
