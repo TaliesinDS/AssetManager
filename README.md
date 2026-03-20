@@ -2,6 +2,11 @@
 
 Python CLI tool for managing a game dev texture library. Scans PBR texture sets from mixed sources (PolyHaven, AmbientCG, Megascans, etc.) and generates sphere preview thumbnails with an interactive HTML gallery.
 
+## Why
+
+Managing large texture libraries across different sources is messy — inconsistent naming, multiple resolutions, and no quick visual overview.  
+This tool provides a fast, visual way to browse and inspect them.
+
 ![Texture Library gallery grid](images/grid.png)
 
 ![Detail modal with resolution switcher](images/detail.png)
