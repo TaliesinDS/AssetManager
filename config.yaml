@@ -1,0 +1,35 @@
+# AssetManager configuration
+# Edit paths to match your system
+
+paths:
+  # Primary texture library to scan
+  texture_library: "G:\\Gamedev\\asset library\\texture"
+
+  # Other asset folders (for future use)
+  game_ready: "G:\\Gamedev\\game ready assets"
+  in_progress: "G:\\Gamedev\\in progress assets"
+  unsorted: "G:\\Gamedev\\unsorted assets"
+
+  # Where to write output (thumbnails, catalog, gallery)
+  output: "./output"
+
+  # Blender executable (needed for thumbnail generation)
+  blender: "C:\\Program Files\\Blender Foundation\\Blender 4.2\\blender.exe"
+
+thumbnail:
+  # Resolution of generated sphere preview thumbnails
+  size: 256
+
+unity_export:
+  # Target render pipeline
+  render_pipeline: "URP"
+
+  # Default resolution to export (picks closest available)
+  preferred_resolution: "2K"
+
+  # URP Lit shader notes:
+  # - Normal maps: expects OpenGL format (Y+ up). Scanner prefers _NormalGL over _NormalDX.
+  #   Megascans _Normal maps are DX and may need green channel flip (future feature).
+  # - Smoothness: URP uses Smoothness = 1 - Roughness. Currently exports raw Roughness;
+  #   you can invert in Unity's texture import settings or a future --invert-roughness flag.
+  # - Metallic: URP Lit expects Metallic (R) + Smoothness (A) packed. Not yet auto-packed.
