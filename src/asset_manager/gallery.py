@@ -15,12 +15,12 @@ GALLERY_TEMPLATE = """\
 <title>Texture Library</title>
 <style>
   :root {
-    --bg: #1a1a2e;
-    --card-bg: #16213e;
+    --bg: #3a3a3a;
+    --card-bg: #303030;
     --text: #e0e0e0;
-    --accent: #0f3460;
-    --hover: #533483;
-    --modal-bg: #0d1526;
+    --accent: #4a4a4a;
+    --hover: #555555;
+    --modal-bg: #2a2a2a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -30,7 +30,7 @@ GALLERY_TEMPLATE = """\
     padding: 1.5rem;
   }
   h1 { margin-bottom: 0.5rem; font-size: 1.5rem; }
-  .stats { color: #888; margin-bottom: 1.5rem; font-size: 0.9rem; }
+  .stats { color: #999; margin-bottom: 1.5rem; font-size: 0.9rem; }
   .controls {
     display: flex;
     gap: 1rem;
@@ -40,7 +40,7 @@ GALLERY_TEMPLATE = """\
   }
   .controls input, .controls select {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #333;
+    border: 1px solid #555;
     border-radius: 6px;
     background: var(--card-bg);
     color: var(--text);
@@ -51,7 +51,7 @@ GALLERY_TEMPLATE = """\
   /* Toggle switch */
   .toggle-group {
     display: flex;
-    border: 1px solid #333;
+    border: 1px solid #555;
     border-radius: 6px;
     overflow: hidden;
     font-size: 0.8rem;
@@ -68,7 +68,7 @@ GALLERY_TEMPLATE = """\
     background: var(--accent);
     color: var(--text);
   }
-  .toggle-btn:hover:not(.active) { background: #1a2a4e; }
+  .toggle-btn:hover:not(.active) { background: #444; }
 
   .grid {
     display: grid;
@@ -90,7 +90,7 @@ GALLERY_TEMPLATE = """\
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    background: #111;
+    background: #252525;
   }
   .thumb-wrap img {
     position: absolute;
@@ -108,7 +108,7 @@ GALLERY_TEMPLATE = """\
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    color: #555;
+    color: #888;
   }
   .info { padding: 0.6rem 0.75rem; }
   .info .name {
@@ -120,7 +120,7 @@ GALLERY_TEMPLATE = """\
   }
   .info .meta {
     font-size: 0.7rem;
-    color: #888;
+    color: #999;
     margin-top: 0.25rem;
   }
   .badge {
@@ -130,10 +130,10 @@ GALLERY_TEMPLATE = """\
     font-size: 0.65rem;
     margin-right: 0.3rem;
   }
-  .badge.polyhaven { background: #2d6a4f; }
-  .badge.ambientcg { background: #b56727; }
-  .badge.megascans { background: #3a5a9c; }
-  .badge.unknown { background: #555; }
+  .badge.polyhaven { background: #4a4a4a; }
+  .badge.ambientcg { background: #4a4a4a; }
+  .badge.megascans { background: #4a4a4a; }
+  .badge.unknown { background: #4a4a4a; }
   .res-tags {
     display: flex;
     gap: 0.25rem;
@@ -146,9 +146,9 @@ GALLERY_TEMPLATE = """\
     border-radius: 3px;
     font-size: 0.6rem;
     font-weight: 600;
-    background: #2a2a4a;
+    background: #444;
     color: #aaa;
-    border: 1px solid #3a3a5a;
+    border: 1px solid #555;
   }
   .hidden { display: none; }
 
@@ -200,7 +200,7 @@ GALLERY_TEMPLATE = """\
     height: 280px;
     object-fit: cover;
     border-radius: 8px;
-    background: #111;
+    background: #252525;
     display: block;
   }
   .modal-preview-box .label {
@@ -231,15 +231,15 @@ GALLERY_TEMPLATE = """\
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-size: 0.7rem;
-    background: #1a2a3e;
-    border: 1px solid #2a3a5a;
-    color: #8ab4d8;
+    background: #3a3a3a;
+    border: 1px solid #555;
+    color: #aaa;
   }
   .btn {
     display: inline-block;
     padding: 0.5rem 1rem;
     border-radius: 6px;
-    border: 1px solid #444;
+    border: 1px solid #555;
     background: var(--accent);
     color: var(--text);
     font-size: 0.85rem;
@@ -247,7 +247,7 @@ GALLERY_TEMPLATE = """\
     text-decoration: none;
     transition: background 0.15s;
   }
-  .btn:hover { background: #1a4a7a; }
+  .btn:hover { background: #555; }
   .btn + .btn { margin-left: 0.5rem; }
   .folder-path {
     font-size: 0.75rem;
@@ -272,13 +272,13 @@ GALLERY_TEMPLATE = """\
   }
   .tile-section .label input[type=range] {
     width: 120px;
-    accent-color: #4a7aaa;
+    accent-color: #999;
   }
   .tile-box {
     width: 100%;
     height: 280px;
     border-radius: 8px;
-    background-color: #111;
+    background-color: #252525;
     background-repeat: repeat;
     background-size: 50% auto;
     cursor: grab;
