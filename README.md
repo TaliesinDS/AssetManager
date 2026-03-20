@@ -42,10 +42,10 @@ assetmgr gallery
 assetmgr serve
 
 # Export a specific texture for Unity
-~~assetmgr unity-export --name cobblestone~~
+# assetmgr unity-export --name cobblestone
 
 # Export everything
-~~assetmgr unity-export~~
+# assetmgr unity-export
 ```
 
 ## Commands
@@ -56,7 +56,7 @@ assetmgr serve
 | `gallery` | Generate a self-contained `output/gallery.html` with search & filter |
 | `thumbnails` | Render PBR sphere previews via Blender headless (cached — only renders new) |
 | `serve` | Start a local server for the gallery with Browse Files & Open in Explorer |
-|~~ `unity-export` | Copy & rename maps into Unity-standard folders you can drop into `Assets/` ~~|
+| ##`unity-export` | Copy & rename maps into Unity-standard folders you can drop into `Assets/` |
 
 ## Gallery Features
 
@@ -82,7 +82,7 @@ paths:
   output: "./output"
   blender: "C:\\Program Files\\Blender Foundation\\Blender 5.0\\blender.exe"
 
-~~unity_export:
+#unity_export:
   render_pipeline: "URP"
   preferred_resolution: "2K"~~
 ```
@@ -99,9 +99,9 @@ The scanner auto-detects the texture provider and normalizes map naming:
 | AmbientCG | `Name_4K-JPG` | `_Color`, `_Roughness`, `_NormalGL` | Preview `.png`, `.blend`, `.usdc` |
 | Megascans | `name_hashcode_4k` | `_BaseColor`, `_Normal`, `_Roughness` | `.json` metadata with categories |
 
-~~## Unity Export
+~~## Unity Export~~
 
-`unity-export` creates folders like:
+`unity-export` ~~creates folders like:~~
 
 ```
 output/unity/
@@ -114,7 +114,7 @@ output/unity/
 │   ├── ...
 ```
 
-These can be copied directly into your Unity project's `Assets/Textures/` folder. Unity imports them without complaint.~~
+~~These can be copied directly into your Unity project's `Assets/Textures/` folder. Unity imports them without complaint.~~
 
 ## Requirements
 
