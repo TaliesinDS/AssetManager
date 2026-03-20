@@ -31,7 +31,6 @@ BLENDER_SCRIPT = textwrap.dedent('''\
 
     # Create material
     mat = bpy.data.materials.new("Preview")
-    mat.use_nodes = True
     sphere.data.materials.append(mat)
 
     nodes = mat.node_tree.nodes
@@ -99,14 +98,14 @@ BLENDER_SCRIPT = textwrap.dedent('''\
     # World background
     world = bpy.data.worlds.new("World")
     bpy.context.scene.world = world
-    world.use_nodes = True
     bg = world.node_tree.nodes["Background"]
     bg.inputs["Color"].default_value = (0.15, 0.15, 0.18, 1.0)
     bg.inputs["Strength"].default_value = 0.5
 
     # Render settings
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    # BLENDER_EEVEE_NEXT was renamed to BLENDER_EEVEE in Blender 5.0
+    scene.render.engine = "BLENDER_EEVEE"
     scene.render.resolution_x = size
     scene.render.resolution_y = size
     scene.render.film_transparent = True

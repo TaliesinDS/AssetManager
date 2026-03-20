@@ -110,6 +110,12 @@ def cmd_unity_export(args: argparse.Namespace, config: dict) -> None:
     print("You can copy any of these folders directly into your Unity project's Assets/ folder.")
 
 
+def cmd_serve(args: argparse.Namespace, config: dict) -> None:
+    """Serve the gallery on localhost with Explorer integration."""
+    from .server import serve_gallery
+    serve_gallery(port=args.port)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="assetmgr",
@@ -137,6 +143,10 @@ def main() -> None:
     unity_parser.add_argument("--name", type=str, help="Export only textures matching this name")
     unity_parser.add_argument("--all-maps", action="store_true", help="Include all map types, not just Unity essentials")
 
+    # serve
+    serve_parser = subparsers.add_parser("serve", help="Serve gallery on localhost with Explorer integration")
+    serve_parser.add_argument("--port", type=int, default=8271, help="Port number (default: 8271)")
+
     args = parser.parse_args()
     config_path = Path(args.config) if args.config else None
     config = load_config(config_path)
@@ -146,6 +156,7 @@ def main() -> None:
         "gallery": cmd_gallery,
         "thumbnails": cmd_thumbnails,
         "unity-export": cmd_unity_export,
+        "serve": cmd_serve,
     }
     commands[args.command](args, config)
 

@@ -30,24 +30,29 @@ Target: Unity URP.
 
 ## Phase 2 — HTML Gallery ✅ DONE
 
-**Status: Fully working with auto-generated thumbnails**
+**Status: Fully working with sphere/flat toggle, detail modal, and local server**
 
-- [x] `gallery.py` — 124KB HTML with file:// image references (was 24MB with base64)
-- [x] Auto-generates 256px albedo-crop thumbnails via Pillow (194/262 generated, rest are EXR-only)
+- [x] `gallery.py` — self-contained HTML with base64-embedded thumbnails (~18MB with both sphere + flat per card)
+- [x] Both sphere (Blender PBR) and flat (albedo crop) thumbnails per card with toggle switch
 - [x] Dark theme, responsive grid, search by name, filter by source & resolution
-- [x] Provider preview images used when available (AmbientCG)
+- [x] Detail modal with both previews, map list, source, resolutions, folder path
+- [x] "Browse Files" — server-side directory listing with clickable image previews
+- [x] "Open in Explorer" — opens texture folder in Windows Explorer via server API
+- [x] `server.py` — localhost server (port 8271) serving gallery + browse + folder-open API
+- [x] Port auto-fallback if 8271 is occupied; bat file auto-kills stale server
 
 ---
 
-## Phase 3 — PBR Sphere Thumbnails ✅ SCAFFOLDED
+## Phase 3 — PBR Sphere Thumbnails ✅ DONE
 
-**Status: Code written, needs Blender configured for first run**
+**Status: Fully working with Blender 5.0**
 
 - [x] `thumbnail.py` — Blender headless script: UV sphere + Principled BSDF + albedo/normal/roughness
-- [x] Caching (skips already-rendered thumbnails)
-- [x] Pillow fallback thumbnails work immediately (Phase 2)
-- [ ] Configure Blender path in config.yaml
-- [ ] Run `assetmgr thumbnails` for high-quality sphere renders
+- [x] Uses EEVEE render engine (compatible with Blender 5.0)
+- [x] Caching (skips already-rendered .png thumbnails)
+- [x] Pillow fallback generates flat .jpg crops when Blender isn't available
+- [x] `Generate Thumbnails.bat` for one-click batch rendering
+- [x] 188/190 materials have both sphere and flat thumbnails
 
 ---
 
@@ -98,7 +103,8 @@ AssetManager/
 │       ├── scanner.py               # Library scanner & map classifier
 │       ├── thumbnail.py             # Blender headless sphere renderer
 │       ├── unity_export.py          # Unity-ready folder exporter
-│       └── gallery.py               # HTML gallery generator
+│       ├── gallery.py               # HTML gallery generator
+│       └── server.py                # Localhost gallery server with browse/Explorer API
 ├── tests/
 │   └── __init__.py
 └── output/                          # Generated (gitignored)
@@ -112,9 +118,9 @@ AssetManager/
 
 ## Next Immediate Steps
 
-1. **Install the tool**: `pip install -e .` from the repo root
-2. **Run first scan**: `assetmgr scan` — verify catalog.json looks right
-3. **Generate gallery**: `assetmgr gallery` — open `output/gallery.html` in browser
-4. **Fix any scan issues** — edge cases in map classification, missing folders, etc.
-5. **Test Unity export**: `assetmgr unity-export --name cobblestone` — try importing into Unity
-6. **When ready**: configure Blender path and run `assetmgr thumbnails` for sphere previews
+1. **Phase 1 complete** — all core features (scan, gallery, thumbnails, server, Unity export) are working
+2. **Phase 5 candidates** when needed:
+   - Normal map DX→GL auto-flip for Megascans textures
+   - Metallic+Smoothness RGBA packing for URP
+   - Blender Asset Library bridge
+   - Megascans JSON category tags in gallery search

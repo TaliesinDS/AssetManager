@@ -11,19 +11,31 @@ pip install -e . --user
 # Or just run directly without installing:
 cd src
 python -m asset_manager.cli scan
+```
 
+Or use the **batch files** (double-click from Explorer):
+
+| Batch file | What it does |
+|---|---|
+| `Scan Library.bat` | Scan texture library → `output/catalog.json` |
+| `Generate Thumbnails.bat` | Render PBR sphere thumbnails using Blender (cached) |
+| `Open Gallery.bat` | Regenerate gallery, start local server, open browser |
+| `Export for Unity.bat` | Export all textures as Unity-ready material folders |
+
+### CLI examples
+
+```bash
 # Scan your library → writes output/catalog.json
 assetmgr scan
-# (or: python -m asset_manager.cli scan)
 
-# Generate HTML gallery (works immediately, no Blender needed)
+# Generate PBR sphere thumbnails (requires Blender 5.0)
+assetmgr thumbnails
+
+# Generate HTML gallery
 assetmgr gallery
 
-# Generate PBR sphere thumbnails (requires Blender)
-assetmgr thumbnails --blender "C:\Program Files\Blender Foundation\Blender 4.2\blender.exe"
-
-# Re-generate gallery with thumbnails
-assetmgr gallery
+# Serve gallery with browse & Explorer integration
+assetmgr serve
 
 # Export a specific texture for Unity
 assetmgr unity-export --name cobblestone
@@ -39,7 +51,20 @@ assetmgr unity-export
 | `scan` | Index the texture library → `output/catalog.json` with map types, sources, metadata |
 | `gallery` | Generate a self-contained `output/gallery.html` with search & filter |
 | `thumbnails` | Render PBR sphere previews via Blender headless (cached — only renders new) |
+| `serve` | Start a local server for the gallery with Browse Files & Open in Explorer |
 | `unity-export` | Copy & rename maps into Unity-standard folders you can drop into `Assets/` |
+
+## Gallery Features
+
+The HTML gallery (`Open Gallery.bat`) includes:
+
+- **Sphere / Flat toggle** — switch all card thumbnails between PBR sphere renders and flat albedo crops
+- **Search & filter** — filter by name, source (PolyHaven / AmbientCG / Megascans), or resolution
+- **Detail modal** — click any card to see both previews at a larger size, map types, source, and resolution info
+- **Browse Files** — opens a server-side directory listing where image files are clickable for full-size preview
+- **Open in Explorer** — opens the texture folder directly in Windows Explorer
+
+The gallery server auto-kills any stale process on port 8271 when restarted via the batch file.
 
 ## Configuration
 
@@ -49,7 +74,7 @@ Edit `config.yaml` to set your paths:
 paths:
   texture_library: "G:\\Gamedev\\asset library\\texture"
   output: "./output"
-  blender: "C:\\Program Files\\Blender Foundation\\Blender 4.2\\blender.exe"
+  blender: "C:\\Program Files\\Blender Foundation\\Blender 5.0\\blender.exe"
 ```
 
 All commands accept `--path` and `--output` overrides.
@@ -84,4 +109,6 @@ These can be copied directly into your Unity project's `Assets/Textures/` folder
 ## Requirements
 
 - Python 3.10+
-- Blender (only for `thumbnails` command — everything else works without it)
+- Pillow (`pip install Pillow`) — for flat albedo-crop thumbnails
+- Blender 5.0 (only for `thumbnails` command — everything else works without it)
+- PyYAML (`pip install pyyaml`) — config loading
