@@ -84,23 +84,34 @@ BLENDER_SCRIPT = textwrap.dedent('''\
     cam.rotation_euler = (1.1, 0, 0.8)
     bpy.context.scene.camera = cam
 
-    # Lighting - HDRI-like setup with area lights
+    # Lighting - overcast HDRI feel: large soft lights, low contrast, neutral tones
+    # Key: large area, slightly above and to the side
     bpy.ops.object.light_add(type="AREA", location=(3, -2, 4))
     key_light = bpy.context.active_object
-    key_light.data.energy = 150
-    key_light.data.size = 3
+    key_light.data.energy = 80
+    key_light.data.size = 6
+    key_light.data.color = (1.0, 0.98, 0.96)  # barely warm, almost white
 
-    bpy.ops.object.light_add(type="AREA", location=(-2, 3, 2))
+    # Fill: nearly matching key energy so shadows stay soft and open
+    bpy.ops.object.light_add(type="AREA", location=(-3, 2, 2))
     fill_light = bpy.context.active_object
-    fill_light.data.energy = 50
-    fill_light.data.size = 4
+    fill_light.data.energy = 65
+    fill_light.data.size = 8
+    fill_light.data.color = (0.96, 0.98, 1.0)  # barely cool, almost white
 
-    # World background
+    # Top wrap: mimics overcast sky dome from above
+    bpy.ops.object.light_add(type="AREA", location=(0, 0, 5))
+    top_light = bpy.context.active_object
+    top_light.data.energy = 40
+    top_light.data.size = 10
+    top_light.data.color = (1.0, 1.0, 1.0)
+
+    # World background: bright neutral grey — drives ambient fill on shadow side
     world = bpy.data.worlds.new("World")
     bpy.context.scene.world = world
     bg = world.node_tree.nodes["Background"]
-    bg.inputs["Color"].default_value = (0.15, 0.15, 0.18, 1.0)
-    bg.inputs["Strength"].default_value = 0.5
+    bg.inputs["Color"].default_value = (0.65, 0.67, 0.70, 1.0)  # soft neutral sky grey
+    bg.inputs["Strength"].default_value = 1.2
 
     # Render settings
     scene = bpy.context.scene

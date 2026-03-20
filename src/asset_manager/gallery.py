@@ -260,6 +260,31 @@ GALLERY_TEMPLATE = """\
     color: #888;
     transition: opacity 0.3s;
   }
+  /* Tiling preview */
+  .tile-section { margin-bottom: 1.25rem; }
+  .tile-section .label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .tile-section .label input[type=range] {
+    width: 120px;
+    accent-color: #4a7aaa;
+  }
+  .tile-box {
+    width: 100%;
+    height: 280px;
+    border-radius: 8px;
+    background-color: #111;
+    background-repeat: repeat;
+    background-size: 50% auto;
+    cursor: grab;
+    overflow: hidden;
+  }
+  .tile-box:active { cursor: grabbing; }
 </style>
 </head>
 <body>
@@ -304,6 +329,10 @@ GALLERY_TEMPLATE = """\
         <img id="modal-flat" src="" alt="Flat preview">
         <div class="label">Flat</div>
       </div>
+    </div>
+    <div class="tile-section">
+      <div class="label">Tiling <input type="range" id="tile-zoom" min="10" max="200" value="50"> <span id="tile-zoom-label">2×2</span></div>
+      <div class="tile-box" id="tile-box"></div>
     </div>
     <dl class="modal-detail" id="modal-detail"></dl>
     <div class="modal-maps" id="modal-maps"></div>
@@ -372,6 +401,13 @@ cards.forEach(c => {
     const flat = c.querySelector(".thumb-flat");
     document.getElementById("modal-sphere").src = sphere ? sphere.src : "";
     document.getElementById("modal-flat").src = flat ? flat.src : "";
+    // Tiling preview — use flat albedo
+    const tileSrc = flat ? flat.src : (sphere ? sphere.src : "");
+    tileBox.style.backgroundImage = tileSrc ? "url(" + tileSrc + ")" : "none";
+    tileZoom.value = 50;
+    tileBgPos = [0, 0];
+    tileBox.style.backgroundPosition = "0px 0px";
+    updateTile();
     // Detail info
     const dl = document.getElementById("modal-detail");
     dl.innerHTML =
@@ -401,6 +437,42 @@ overlay.addEventListener("click", e => {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") overlay.classList.remove("open");
 });
+
+// --- Tiling preview ---
+const tileBox = document.getElementById("tile-box");
+const tileZoom = document.getElementById("tile-zoom");
+const tileZoomLabel = document.getElementById("tile-zoom-label");
+let tileDragStart = null;
+let tileBgPos = [0, 0];
+
+function updateTile() {
+  const pct = parseInt(tileZoom.value);
+  tileBox.style.backgroundSize = pct + "% auto";
+  const reps = Math.round(100 / pct);
+  tileZoomLabel.textContent = reps + "\u00d7" + reps;
+}
+tileZoom.addEventListener("input", updateTile);
+
+tileBox.addEventListener("mousedown", e => {
+  tileDragStart = [e.clientX, e.clientY];
+  e.preventDefault();
+});
+document.addEventListener("mousemove", e => {
+  if (!tileDragStart) return;
+  tileBgPos[0] += e.clientX - tileDragStart[0];
+  tileBgPos[1] += e.clientY - tileDragStart[1];
+  tileBox.style.backgroundPosition = tileBgPos[0] + "px " + tileBgPos[1] + "px";
+  tileDragStart = [e.clientX, e.clientY];
+});
+document.addEventListener("mouseup", () => { tileDragStart = null; });
+
+tileBox.addEventListener("wheel", e => {
+  e.preventDefault();
+  let v = parseInt(tileZoom.value) + (e.deltaY > 0 ? -5 : 5);
+  v = Math.max(10, Math.min(200, v));
+  tileZoom.value = v;
+  updateTile();
+}, {passive: false});
 
 // --- Open in Explorer (via local server API) ---
 let currentFolder = "";
@@ -513,7 +585,7 @@ def _generate_quick_thumbnail(texture_set: TextureSet, thumbnails_dir: Path) -> 
             left = (w - side) // 2
             top = (h - side) // 2
             cropped = img.crop((left, top, left + side, top + side))
-            cropped.thumbnail((256, 256), Image.LANCZOS)
+            cropped.thumbnail((256, 256), Image.Resampling.LANCZOS)
             cropped = cropped.convert("RGB")  # JPEG needs RGB
             cropped.save(out_path, "JPEG", quality=80)
         return out_path
@@ -530,7 +602,7 @@ def _resize_preview(preview_path: Path, folder_name: str, thumbnails_dir: Path) 
         from PIL import Image
         thumbnails_dir.mkdir(parents=True, exist_ok=True)
         with Image.open(preview_path) as img:
-            img.thumbnail((256, 256), Image.LANCZOS)
+            img.thumbnail((256, 256), Image.Resampling.LANCZOS)
             img = img.convert("RGB")
             img.save(out_path, "JPEG", quality=80)
         return out_path

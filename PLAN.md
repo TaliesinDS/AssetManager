@@ -82,6 +82,44 @@ Potential improvements (do NOT build until needed):
 - **Tagging / search** — Megascans JSON already has categories. Could expose in gallery.
 - **Texture deduplication** — group same material at different resolutions, export only preferred res.
 
+### Tiling Preview — Options
+
+Add a tiling preview to the gallery modal so you can see how a texture repeats and check for visible seams. Several approaches, from simplest to richest:
+
+#### Option A: CSS tiling + zoom slider (easiest, no new deps)
+
+Tile the flat albedo image using `background-image: repeat` in a div inside the modal. Add a range slider that adjusts `background-size` to zoom in/out (fewer/more repetitions visible). Click-drag to pan via CSS `background-position`.
+
+- **Pros:** Zero dependencies, instant (no extra rendering), works on any image we already have, tiny amount of JS.
+- **Cons:** Flat albedo only — no PBR lighting, no normal/roughness contribution. Purely a seam/pattern check.
+- **Effort:** ~30 min. Add a `<div>` + slider + ~20 lines of JS to the gallery template.
+
+#### Option B: Blender-rendered tiling plane (best quality, slow)
+
+Add a second Blender render pass in `thumbnail.py`: a flat plane viewed top-down, tiled 3×3 or 4×4, with full PBR (albedo + normal + roughness). Cache as `{name}_tile.png` alongside the sphere `.png`.
+
+- **Pros:** Full PBR tiling with correct lighting and surface detail. Consistent with the existing sphere workflow.
+- **Cons:** Doubles the Blender render time (~2× thumbnail generation). Static image — not zoomable unless we render at high res. Large file per material.
+- **Effort:** ~1 hour. Copy the sphere render script, swap the sphere for a subdivided plane, set UV tiling, aim camera straight down.
+
+#### Option C: Three.js / WebGL live tiling (richest, heaviest)
+
+Embed a small Three.js scene in the modal: a subdivided plane with the albedo, normal, and roughness maps loaded as textures, tiled via UV repeat. Mouse wheel zooms (adjusts tile count), click-drag orbits or pans.
+
+- **Pros:** Full interactive PBR tiling that responds to zoom in real-time. Can rotate lighting. Most impressive UX.
+- **Cons:** Adds Three.js as a dependency (~150KB gzipped CDN). Loading full-res textures per material on click is slow. Complex JS. The gallery HTML would need to link to the CDN or bundle Three.js.
+- **Effort:** ~3–4 hours. Requires loading map files from the server on demand (not embedded in the HTML).
+
+#### Option D: CSS tiling + Blender tile hybrid
+
+Use Option A (CSS tiling with zoom) as the default quick preview. Optionally pre-render a tiled PBR plane via Blender (Option B) and show it as a static "Tiling (PBR)" tab in the modal when available.
+
+- **Pros:** Best of both — instant CSS preview for seam checking, high-quality PBR tile when pre-rendered.
+- **Cons:** Two preview systems to maintain. Doubles Blender render time if you want the PBR tiles.
+- **Effort:** ~1.5 hours total.
+
+**Recommendation:** Start with **Option A** (CSS tiling + zoom slider) — it's fast to build, zero dependencies, and covers the main use case (checking seams and tiling patterns). If PBR tiling becomes important later, add Option B renders on top.
+
 ---
 
 ## Repo Structure

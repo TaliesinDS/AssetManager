@@ -5,7 +5,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from .models import MapType, TextureSet
+from .models import MapType, TextureMap, TextureSet
 
 # Unity URP conventional map suffixes
 UNITY_MAP_NAMES: dict[MapType, str] = {
@@ -46,10 +46,8 @@ UNITY_ESSENTIAL_MAPS = {
 FORMAT_PREFERENCE = ["png", "jpg", "jpeg", "tif", "tiff", "exr", "tga"]
 
 
-def pick_best_map(texture_set: TextureSet, map_type: MapType) -> "TextureMap | None":
+def pick_best_map(texture_set: TextureSet, map_type: MapType) -> TextureMap | None:
     """Pick the best version of a map type (prefer smaller formats, right resolution)."""
-    from .models import TextureMap
-
     candidates = [m for m in texture_set.maps if m.map_type == map_type]
     if not candidates:
         return None
