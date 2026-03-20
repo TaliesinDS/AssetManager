@@ -130,12 +130,6 @@ def generate_thumbnail(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{texture_set.folder.name}.png"
 
-    # If we already have a preview (AmbientCG), just copy/symlink it
-    if texture_set.preview_image and texture_set.preview_image.exists():
-        import shutil
-        shutil.copy2(texture_set.preview_image, output_path)
-        return output_path
-
     # Need at least an albedo map to render anything useful
     albedo = texture_set.get_map(MapType.ALBEDO)
     if not albedo:

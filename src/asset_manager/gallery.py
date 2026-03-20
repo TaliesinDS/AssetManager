@@ -181,8 +181,9 @@ def _thumbnail_src(texture_set: TextureSet, thumbnails_dir: Path | None) -> str:
     thumb_path = None
 
     # 1. Check for a rendered/cached thumbnail (Blender or Pillow-generated)
+    #    Prefer .png (Blender renders) over .jpg (Pillow crops)
     if thumbnails_dir:
-        for ext in (".jpg", ".png"):
+        for ext in (".png", ".jpg"):
             candidate = thumbnails_dir / f"{texture_set.folder.name}{ext}"
             if candidate.exists():
                 thumb_path = candidate
