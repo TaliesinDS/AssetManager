@@ -1,6 +1,6 @@
 # AssetManager
 
-Python CLI tool for managing a game dev texture library. Scans PBR texture sets from mixed sources (PolyHaven, AmbientCG, Megascans, etc.), generates sphere preview thumbnails, ~~and exports Unity-ready material folders~~.
+Python CLI tool for managing a game dev texture library. Scans PBR texture sets from mixed sources (PolyHaven, AmbientCG, Megascans, etc.) and generates sphere preview thumbnails with an interactive HTML gallery.
 
 ![Texture Library gallery grid](images/grid.png)
 
@@ -24,7 +24,7 @@ Or use the **batch files** (double-click from Explorer):
 | `Scan Library.bat` | Scan texture library → `output/catalog.json` |
 | `Generate Thumbnails.bat` | Render PBR sphere thumbnails using Blender (cached) |
 | `Open Gallery.bat` | Regenerate gallery, start local server, open browser |
-| `Export for Unity.bat` | Export all textures as Unity-ready material folders |
+| `Export for Unity.bat` | *(WIP)* Export textures as Unity-ready material folders |
 
 ### CLI examples
 
@@ -41,10 +41,10 @@ assetmgr gallery
 # Serve gallery with browse & Explorer integration
 assetmgr serve
 
-# Export a specific texture for Unity
+# Export a specific texture for Unity (WIP — may be reworked)
 # assetmgr unity-export --name cobblestone
 
-# Export everything
+# Export everything (WIP)
 # assetmgr unity-export
 ```
 
@@ -56,7 +56,7 @@ assetmgr serve
 | `gallery` | Generate a self-contained `output/gallery.html` with search & filter |
 | `thumbnails` | Render PBR sphere previews via Blender headless (cached — only renders new) |
 | `serve` | Start a local server for the gallery with Browse Files & Open in Explorer |
-| ##`unity-export` | Copy & rename maps into Unity-standard folders you can drop into `Assets/` |
+| `unity-export` | *(WIP)* Copy & rename maps into Unity-standard folders you can drop into `Assets/` |
 
 ## Gallery Features
 
@@ -82,9 +82,9 @@ paths:
   output: "./output"
   blender: "C:\\Program Files\\Blender Foundation\\Blender 5.0\\blender.exe"
 
-#unity_export:
-  render_pipeline: "URP"
-  preferred_resolution: "2K"~~
+# unity_export:  (WIP — not yet fully working)
+#   render_pipeline: "URP"
+#   preferred_resolution: "2K"
 ```
 
 All commands accept `--path` and `--output` overrides.
@@ -99,9 +99,11 @@ The scanner auto-detects the texture provider and normalizes map naming:
 | AmbientCG | `Name_4K-JPG` | `_Color`, `_Roughness`, `_NormalGL` | Preview `.png`, `.blend`, `.usdc` |
 | Megascans | `name_hashcode_4k` | `_BaseColor`, `_Normal`, `_Roughness` | `.json` metadata with categories |
 
-~~## Unity Export~~
+## Unity Export (WIP)
 
-`unity-export` ~~creates folders like:~~
+> **Note:** Unity export is experimental and may be reworked. Use at your own risk.
+
+`unity-export` creates folders like:
 
 ```
 output/unity/
@@ -114,7 +116,7 @@ output/unity/
 │   ├── ...
 ```
 
-~~These can be copied directly into your Unity project's `Assets/Textures/` folder. Unity imports them without complaint.~~
+These can be copied into your Unity project's `Assets/Textures/` folder.
 
 ## Requirements
 
